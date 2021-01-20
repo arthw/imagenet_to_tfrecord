@@ -79,7 +79,7 @@ VALIDATION_FILE = 'ILSVRC2012_img_val.tar'
 LABELS_FILE = 'synset_labels.txt'
 
 TRAINING_SHARDS = 1024
-VALIDATION_SHARDS = 128
+VALIDATION_SHARDS = 352
 
 TRAINING_DIRECTORY = 'train'
 VALIDATION_DIRECTORY = 'validation'
@@ -338,17 +338,16 @@ def _process_dataset(filenames, synsets, labels, output_directory, prefix,
     files: list of tf-record filepaths created from processing the dataset.
   """
   _check_or_create_dir(output_directory)
-  chunksize = int(math.ceil(len(filenames) / num_shards))
+  #chunksize = int(math.ceil(len(filenames) / num_shards))
+  chunksize = len(filenames) -1
   coder = ImageCoder()
 
   files = []
 
-  for shard in range(num_shards):
-    if shard * chunksize >= len(filenames):
-        continue
+  for shard in range(1):
     chunk_files = filenames[shard * chunksize : (shard + 1) * chunksize]
     chunk_synsets = synsets[shard * chunksize : (shard + 1) * chunksize]
-    single_filename = "{0}-{1:05d}-of-{2:05d}".format(prefix,shard,num_shards)
+    single_filename = "{0}-{1:05d}-of-{2:05d}".format(prefix,shard,shard)
     output_file = os.path.join(
         output_directory, single_filename)
     _process_image_files_batch(coder, output_file, chunk_files,
@@ -402,8 +401,6 @@ def convert_to_tf_records(raw_data_dir):
 
   # Create validation data
   logging.info('Processing the validation data.')
-  print(list(validation_files))
-  print(VALIDATION_SHARDS)
   validation_records = _process_dataset(
       validation_files, validation_synsets, labels,
       os.path.join(FLAGS.local_scratch_dir, VALIDATION_DIRECTORY),
