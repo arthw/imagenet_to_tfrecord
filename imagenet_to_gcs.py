@@ -79,7 +79,7 @@ VALIDATION_FILE = 'ILSVRC2012_img_val.tar'
 LABELS_FILE = 'synset_labels.txt'
 
 TRAINING_SHARDS = 1024
-VALIDATION_SHARDS = 352
+VALIDATION_SHARDS = None
 
 TRAINING_DIRECTORY = 'train'
 VALIDATION_DIRECTORY = 'validation'
@@ -383,7 +383,7 @@ def convert_to_tf_records(raw_data_dir):
   # Glob all the validation files
   validation_files = sorted(tf.gfile.Glob(
       os.path.join(raw_data_dir, VALIDATION_DIRECTORY, '*.JPEG')))
-
+  VALIDATION_SHARDS = len(validation_files)
   # Get validation file synset labels from labels.txt
   validation_synsets = tf.gfile.FastGFile(
       os.path.join(raw_data_dir, LABELS_FILE), 'r').read().splitlines()

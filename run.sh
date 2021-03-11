@@ -5,8 +5,7 @@ rm -rf $IMAGENET_HOME/tf_records/*
 rm -rf $IMAGENET_HOME/validation/*
 cd $IMAGENET_HOME/validation
 wget -O cat.JPEG https://raw.githubusercontent.com/intel/caffe/master/examples/images/cat.jpg
-cp cat.JPEG cat1.JPEG
-for i in {1..352}
+for i in {1..800}
 do
    cp cat.JPEG "cat$i.JPEG"
 done
